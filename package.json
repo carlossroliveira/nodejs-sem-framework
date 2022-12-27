@@ -1,8 +1,23 @@
 {
   "name": "nodejs-sem-framework",
   "version": "1.0.0",
+  "description": "Meu primeiro projeto em node.js",
   "main": "index.js",
-  "repository": "https://github.com/carlossroliveira/nodejs-sem-framework.git",
-  "author": "carlos oliveira <carlos.sroliveira@hotmail.com>",
-  "license": "MIT"
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlossroliveira/nodejs-sem-framework.git"
+  },
+  "keywords": [],
+  "author": "Carlos Oliveira <carlos.sroliveira@hotmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/carlossroliveira/nodejs-sem-framework/issues"
+  },
+  "homepage": "https://github.com/carlossroliveira/nodejs-sem-framework#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
