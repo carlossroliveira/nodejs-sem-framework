@@ -1,6 +1,5 @@
 const http = require("http");
 const { randomUUID } = require("crypto");
-const { Console } = require("console");
 
 /* 
   GET: Buscar um dado
@@ -9,53 +8,59 @@ const { Console } = require("console");
   DELETE: Remover um dado
 */
 
-const list = [];
+const listOfPerson = [];
 
 const server = http.createServer((request, response) => {
-  if (request.url === "/users") {
-    if (request.method === "GET") {
-      return response.end(JSON.stringify(list));
-    }
+  const url = request.url.split("/")[2];
 
-    if (request.method === "POST") {
-      request
-        .on("data", (data) => {
-          const dataUser = JSON.parse(data);
-
-          const user = {
-            id: randomUUID(),
-            ...dataUser,
-          };
-
-          list.push(user);
-        })
-        .once("end", () => {
-          return response.end(JSON.stringify(list));
-        });
-    }
+  if (request.url === "/users" && request.method === "GET") {
+    return response.end(JSON.stringify(listOfPerson));
   }
 
-  if (request.url.startsWith("/users")) {
-    if (request.method === "PUT") {
-      const url = request.url;
-      const splitUrl = url.split("/");
-      const userId = splitUrl[2];
+  if (request.url === "/users" && request.method === "POST") {
+    request
+      .on("data", (data) => {
+        const dataUser = JSON.parse(data);
 
-      const useIndex = list.findIndex((user) => user.id === userId);
+        const user = {
+          id: randomUUID(),
+          ...dataUser,
+        };
 
-      console.log("Info:", list[useIndex]);
+        listOfPerson.push(user);
+      })
+      .on("end", () => {
+        return response.end(JSON.stringify(listOfPerson));
+      });
+  }
 
-      request.on("data", (data) => {
+  if (request.url.startsWith("/users") && request.method === "PUT") {
+    const useIndex = listOfPerson.findIndex((user) => user.id === url);
+
+    request
+      .on("data", (data) => {
         const dataUser2 = JSON.parse(data);
 
-        list[useIndex] = {
-          id: userId,
+        listOfPerson[useIndex] = {
+          id: url,
           ...dataUser2,
         };
-      }).on("end", () => {
-        return response.end(JSON.stringify(list));
       })
-    }
+      .on("end", () => {
+        return response.end(JSON.stringify(listOfPerson));
+      });
+  }
+
+  if (request.url.startsWith("/users") && request.method === "DELETE") {
+    const useIndex = listOfPerson.findIndex((user) => user.id === url);
+
+    request
+      .on("data", () => {
+        listOfPerson[useIndex] = [];
+      })
+      .on("end", () => {
+        return response.end(JSON.stringify(listOfPerson));
+      });
   }
 });
 
